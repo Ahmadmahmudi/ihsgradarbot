@@ -1,46 +1,23 @@
 import requests
 
-TOKEN = "8527933196:AAEayPXeIYoTJXq9k2iIau22Q7dyifNEzRU"
-CHAT_ID = "273491234"
+symbol = "BBCA.JK"
 
-url = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=%5EJKSE,%5EGSPC"
-r = requests.get(url)
-data = r.json()['quoteResponse']['result']
+url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbol}"
 
-ihsg = data[0]
-sp = data[1]
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
 
-ihsgChange = ihsg['regularMarketChangePercent']
-spChange = sp['regularMarketChangePercent']
+r = requests.get(url, headers=headers)
 
-score = 0
-if ihsgChange < 0:
-    score -= 1
-if spChange < 0:
-    score -= 1
+print("Status Code:", r.status_code)
+print("Response Text:", r.text)
 
-if score <= -2:
-    signal = "⚠️ Bearish Kuat"
-elif score == -1:
-    signal = "⚠️ Bearish Ringan"
-elif score == 0:
-    signal = "🤔 Sideways"
+if r.status_code == 200:
+    try:
+        data = r.json()['quoteResponse']['result']
+        print(data)
+    except Exception as e:
+        print("JSON error:", e)
 else:
-    signal = "🚀 Bullish Bias"
-
-message = f"""
-📊 IHSG Radar Update
-
-IHSG: {ihsg['regularMarketPrice']} ({ihsgChange:.2f}%)
-S&P500: {sp['regularMarketPrice']} ({spChange:.2f}%)
-
-Bias Besok:
-{signal}
-
-Gunakan risk management ⚠️
-"""
-
-requests.post(
-    f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-    data={"chat_id": CHAT_ID, "text": message}
-)
+    print("Request failed")
