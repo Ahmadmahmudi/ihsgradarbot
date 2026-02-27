@@ -5,11 +5,11 @@ CHAT_ID = "273491234"
 
 message = "Bot berhasil jalan 🚀"
 
-url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+url = f"https://api.telegram.org/bot8527933196:AAEayPXeIYoTJXq9k2iIau22Q7dyifNEzRUO/sendMessage"
 
 payload = {
-    "chat_id": CHAT_ID,
-    "text": message
+    "chat_id": 273491234,
+    "text": hai bro
 }
 
 requests.post(url, data=payload)
